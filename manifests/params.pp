@@ -1,6 +1,6 @@
 # == Class: ssl::params
-# Sets up some params based on OSFamily for the remainder of the module to make
-# use of
+# Sets up some params based on OSFamily for the remainder
+# of the module to make use of
 class ssl::params {
 
   $package = 'openssl'
