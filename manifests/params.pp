@@ -6,10 +6,6 @@ class ssl::params {
   $package = 'openssl'
 
   case $::osfamily {
-    'RedHat': {
-      $crt_dir = '/etc/pki/tls/certs'
-      $key_dir = '/etc/pki/tls/private'
-    }
     'Debian': {
       $crt_dir = '/etc/ssl/certs'
       $key_dir = '/etc/ssl/private'
