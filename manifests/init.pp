@@ -4,11 +4,12 @@
 # is created
 #
 class ssl(
-  $package = $::ssl::package,
+  String $package = $ssl::params::package,
 ) inherits ssl::params {
+
   class { 'ssl::package': package => $package }
 
-  file { "${::ssl::params::crt_dir}/meta":
+  file { "${ssl::params::crt_dir}/meta":
     ensure => directory,
     owner  => 'root',
     group  => 'root',
@@ -17,6 +18,7 @@ class ssl(
 
   # make sure our package is installed and that our metadata directory
   # exists
-  Class[ssl::package] -> Ssl::Cert<| |>
-  File["${::ssl::params::crt_dir}/meta"] -> Ssl::Cert<| |>
+  Class[ssl::package] -> Ssl::Cert <| |>
+    File["${ssl::params::crt_dir}/meta"] -> Ssl::Cert <| |>
 }
+
