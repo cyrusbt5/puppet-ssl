@@ -1,6 +1,6 @@
 [ req ]
-default_bits            = <%= @ssl::params::default_bits %>
-default_md              = <%= @ssl::params::default_md %>
+default_bits            = <%= scope['ssl::params::default_bits'] %>
+default_md              = <%= scope['ssl::params::default_md'] %>
 distinguished_name      = req_distinguished_name
 prompt = no
 <% if @alt_names_real.count > 1 -%>
