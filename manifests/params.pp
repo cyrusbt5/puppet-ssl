@@ -3,22 +3,19 @@
 # of the module to make use of
 class ssl::params {
 
-  $package = 'openssl'
+  $default_bits = 2048
+  $default_md   = 'sha256'
+  $package      = 'openssl'
 
   case $::osfamily {
-    'Debian': {
-      $crt_dir = '/etc/ssl/certs'
-      $key_dir = '/etc/ssl/private'
-    }
-    'Archlinux': {
+    /^(Debian|Ubuntu|Archlinux)$/: {
       $crt_dir = '/etc/ssl/certs'
       $key_dir = '/etc/ssl/private'
     }
     default: {
-      # default to RedHat-style defaults
+      # Default to RedHat|CentOS
       $crt_dir = '/etc/pki/tls/certs'
       $key_dir = '/etc/pki/tls/private'
     }
   }
 }
-
