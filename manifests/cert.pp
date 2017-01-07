@@ -30,13 +30,13 @@
 # === Author:
 #   Aaron Russo <arusso@berkeley.edu>
 define ssl::cert(
-  $cn = $name,
-  $country = 'US',
-  $state =  'Some-State',
-  $city = 'Some-City',
-  $org = 'Acme Ltd',
-  $org_unit = 'Marketing',
-  $alt_names = [ ],
+  String $cn                        = $name,
+  Pattern[/^[A-Z]{2}$/] $country    = 'US',
+  Pattern[/^(?i)[A-Z \-]*$/] $state = 'Some-State',
+  Pattern[/^(?i)[A-Z \-]*$/] $city  = 'Some-City',
+  String $org                       = 'Acme Ltd',
+  String $org_unit                  = 'Marketing',
+  Optional[Array[String] $alt_names,
 ) {
   include ssl
   include ssl::params
@@ -44,14 +44,9 @@ define ssl::cert(
 
   $hostname_regex = '^(?i:)(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$'
 
-  validate_re( $country, '^[A-Z]{2}$' )
-  validate_re( $state, '^(?i)[A-Z \-]*$' )
-  validate_re( $city, '^(?i)[A-Z \-]*$' )
-  validate_string( $org )
-  validate_string( $org_unit )
-  validate_re( $cn, $hostname_regex,
-          "ssl:cert resource '${cn}' does not appear to be a valid hostname." )
-  validate_array($alt_names)
+  if $cn =~ $hostname_regex {
+    fail( "ssl:cert resource '${cn}' does not appear to be a valid hostname." )
+  }
 
   # Add our CN to the alt_names list
   $alt_names_real = flatten( unique( [ $cn, $alt_names ] ) )
@@ -65,7 +60,7 @@ define ssl::cert(
   # Generate our Key file
   # this should only happen once, evar!
   exec { "generate-key-${cn}":
-    command => "/usr/bin/openssl genrsa -out ${key_file} 2048",
+    command => "/usr/bin/openssl genrsa -out ${key_file} ${ssl::params::default_bits} -${ssl::params::default_md}",
     creates => $key_file,
     path    => [ '/bin', '/usr/bin' ],
     require => [ Class['ssl::package'], File["${ssl::params::crt_dir}/meta"] ]
@@ -100,21 +95,22 @@ define ssl::cert(
   exec { "generate-csr-${cn}":
     refreshonly => true,
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
-                     -key ${key_file} -out ${csr_file}",
+                     -key ${key_file} -out ${csr_file} -${ssl::params::default_md}",
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
     notify      =>  Exec["generate-csrh-${cn}"],
   }
 
-  # Generate our Self Signed Cert
+  # Generate our Self Signed Cert.
   exec { "generate-self-${cn}":
     creates     => $crt_file,
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
-                     -key ${key_file} -out ${crt_file} -x509",
+                     -key ${key_file} -out ${crt_file} -x509 -${ssl::params::default_md}",
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
   }
-
+  # CSR Decode to decode your Certificate Signing Request and
+  # verify that it contains the correct information.
   exec { "generate-csrh-${cn}":
     refreshonly => true,
     command     => "/usr/bin/openssl req -in ${csr_file} -text > ${csrh_file}",
