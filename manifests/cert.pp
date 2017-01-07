@@ -36,7 +36,7 @@ define ssl::cert(
   Pattern[/^(?i)[A-Z \-]*$/] $city  = 'Some-City',
   String $org                       = 'Acme Ltd',
   String $org_unit                  = 'Marketing',
-  Optional[Array[String] $alt_names,
+  Optional[Array[String]] $alt_names,
 ) {
   include ssl
   include ssl::params
