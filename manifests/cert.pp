@@ -31,18 +31,18 @@
 #   Aaron Russo <arusso@berkeley.edu>
 define ssl::cert(
   String $cn                         = $name,
-  Pattern[/^[A-Z]{2}$/] $country     = 'US',
-  Pattern[/^(?i)[A-Z \-]*$/] $state  = 'Some-State',
-  Pattern[/^(?i)[A-Z \-]*$/] $city   = 'Some-City',
-  String $org                        = 'Acme Ltd',
-  String $org_unit                   = 'Marketing',
+  Pattern[/^[A-Z]{2}$/] $country     = hiera('ssl::cert::country', 'US'),
+  Pattern[/^(?i)[A-Z \-]*$/] $state  = hiera('ssl::cert::state', 'Some-State'),
+  Pattern[/^(?i)[A-Z \-]*$/] $city   = hiera('ssl::cert::city', 'Some-City'),
+  String $org                        = hiera('ssl::cert::org', 'Acme Ltd'),
+  String $org_unit                   = hiera('ssl::cert::org_unit', 'Marketing'),
   Optional[Array[String]] $alt_names = [],
 ) {
   include ssl
   include ssl::params
   include ssl::package
 
-  $hostname_regex = '/^(?i:)(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
+  $hostname_regex = '/^(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
 
   if $cn =~ $hostname_regex {
     fail( "ssl:cert resource '${cn}' does not appear to be a valid hostname." )
@@ -98,7 +98,7 @@ define ssl::cert(
                      -key ${key_file} -out ${csr_file} -${ssl::params::default_md}",
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
-    notify      =>  Exec["generate-csrh-${cn}"],
+    notify      => Exec["generate-csrh-${cn}"],
   }
 
   # Generate our Self Signed Cert.
