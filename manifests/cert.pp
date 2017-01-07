@@ -42,7 +42,7 @@ define ssl::cert(
   include ssl::params
   include ssl::package
 
-  $hostname_regex = '^(?i:)(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$'
+  $hostname_regex = '/^(?i:)(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
 
   if $cn =~ $hostname_regex {
     fail( "ssl:cert resource '${cn}' does not appear to be a valid hostname." )
