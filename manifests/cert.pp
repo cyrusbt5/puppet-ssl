@@ -30,13 +30,13 @@
 # === Author:
 #   Aaron Russo <arusso@berkeley.edu>
 define ssl::cert(
-  String $cn                        = $name,
-  Pattern[/^[A-Z]{2}$/] $country    = 'US',
-  Pattern[/^(?i)[A-Z \-]*$/] $state = 'Some-State',
-  Pattern[/^(?i)[A-Z \-]*$/] $city  = 'Some-City',
-  String $org                       = 'Acme Ltd',
-  String $org_unit                  = 'Marketing',
-  Optional[Array[String]] $alt_names,
+  String $cn                         = $name,
+  Pattern[/^[A-Z]{2}$/] $country     = 'US',
+  Pattern[/^(?i)[A-Z \-]*$/] $state  = 'Some-State',
+  Pattern[/^(?i)[A-Z \-]*$/] $city   = 'Some-City',
+  String $org                        = 'Acme Ltd',
+  String $org_unit                   = 'Marketing',
+  Optional[Array[String]] $alt_names = [],
 ) {
   include ssl
   include ssl::params
