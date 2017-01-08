@@ -30,20 +30,20 @@
 # === Author:
 #   Aaron Russo <arusso@berkeley.edu>
 define ssl::cert(
-  String $cn                         = $name,
+  String[1] $cn                      = $name,
   Pattern[/^[A-Z]{2}$/] $country     = hiera('ssl::cert::country', 'US'),
   Pattern[/^(?i)[A-Z \-]*$/] $state  = hiera('ssl::cert::state', 'Some-State'),
   Pattern[/^(?i)[A-Z \-]*$/] $city   = hiera('ssl::cert::city', 'Some-City'),
   String $org                        = hiera('ssl::cert::org', 'Acme Ltd'),
   String $org_unit                   = hiera('ssl::cert::org_unit', 'Marketing'),
+  Integer $key_size                  = hiera('ssl::params::default_bits', $ssl::params::default_bits),
+  String $signature_hash             = hiera('ssl::params::default_md', $ssl::params::default_md),
   Optional[Array[String]] $alt_names = [],
 ) {
   include ssl
   include ssl::params
   include ssl::package
 
-  $key_size       = hiera('ssl::params::default_bits', $ssl::params::default_bits)
-  $signature_hash = hiera('ssl::params::default_md', $ssl::params::default_md)
   $hostname_regex = '/^(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
 
   if $cn =~ $hostname_regex {
