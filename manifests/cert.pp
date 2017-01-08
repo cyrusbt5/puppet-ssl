@@ -42,8 +42,8 @@ define ssl::cert(
   include ssl::params
   include ssl::package
 
-  $key_size       = $ssl::params::default_bits
-  $signature_hash = $ssl::params::default_md
+  $key_size       = hiera('ssl::params::default_bits', $ssl::params::default_bits)
+  $signature_hash = hiera('ssl::params::default_md', $ssl::params::default_md)
   $hostname_regex = '/^(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
 
   if $cn =~ $hostname_regex {
@@ -53,10 +53,10 @@ define ssl::cert(
   # Add our CN to the alt_names list
   $alt_names_real = flatten( unique( [ $cn, $alt_names ] ) )
 
-  $cnf_file = "${ssl::params::crt_dir}/meta/${cn}.cnf"
-  $key_file = "${ssl::params::key_dir}/${cn}.key"
-  $crt_file = "${ssl::params::crt_dir}/${cn}.crt"
-  $csr_file = "${ssl::params::crt_dir}/meta/${cn}.csr"
+  $cnf_file  = "${ssl::params::crt_dir}/meta/${cn}.cnf"
+  $key_file  = "${ssl::params::key_dir}/${cn}.key"
+  $crt_file  = "${ssl::params::crt_dir}/${cn}.crt"
+  $csr_file  = "${ssl::params::crt_dir}/meta/${cn}.csr"
   $csrh_file = "${ssl::params::crt_dir}/meta/${cn}.csrh"
 
   # Generate our Key file
@@ -111,7 +111,7 @@ define ssl::cert(
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
   }
-  
+
   # CSR Decode to decode your Certificate Signing Request and
   # verify that it contains the correct information.
   exec { "generate-csrh-${cn}":
