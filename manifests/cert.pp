@@ -42,6 +42,8 @@ define ssl::cert(
   include ssl::params
   include ssl::package
 
+  $key_size       = $ssl::params::default_bits
+  $signature_hash = $ssl::params::default_md
   $hostname_regex = '/^(((([a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*([a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)$/'
 
   if $cn =~ $hostname_regex {
@@ -60,7 +62,7 @@ define ssl::cert(
   # Generate our Key file
   # this should only happen once, evar!
   exec { "generate-key-${cn}":
-    command => "/usr/bin/openssl genrsa -out ${key_file} ${ssl::params::default_bits} -${ssl::params::default_md}",
+    command => "/usr/bin/openssl genrsa -out ${key_file} ${key_size} -${signature_hash}",
     creates => $key_file,
     path    => [ '/bin', '/usr/bin' ],
     require => [ Class['ssl::package'], File["${ssl::params::crt_dir}/meta"] ]
@@ -95,7 +97,7 @@ define ssl::cert(
   exec { "generate-csr-${cn}":
     refreshonly => true,
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
-                     -key ${key_file} -out ${csr_file} -${ssl::params::default_md}",
+                     -key ${key_file} -out ${csr_file} -${signature_hash}",
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
     notify      => Exec["generate-csrh-${cn}"],
@@ -105,10 +107,11 @@ define ssl::cert(
   exec { "generate-self-${cn}":
     creates     => $crt_file,
     command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
-                     -key ${key_file} -out ${crt_file} -x509 -${ssl::params::default_md}",
+                     -key ${key_file} -out ${crt_file} -x509 -${signature_hash}",
     path        => [ '/bin', '/usr/bin' ],
     require     => Exec["generate-key-${cn}"],
   }
+  
   # CSR Decode to decode your Certificate Signing Request and
   # verify that it contains the correct information.
   exec { "generate-csrh-${cn}":
