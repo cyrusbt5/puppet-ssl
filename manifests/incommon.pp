@@ -18,10 +18,10 @@
 # Otherwise, it'll try again the next time puppet runs, until it gets a cert.
 #
 define ssl::incommon (
-  $id = '',
-  $cn = $name
+ Pattern[/^([0-9]+|)$/] $id = '',
+ String[1]              $cn = $name
 ) {
-  validate_re( $id, '^([0-9]+|)$' )
+
   include ssl::params
 
   file { '/usr/local/sbin/check-incommon-cert':
