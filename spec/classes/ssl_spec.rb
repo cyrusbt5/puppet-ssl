@@ -29,8 +29,8 @@ describe 'ssl', :type => :class do
   end
 
   context 'on RedHat-family based systems' do
-    let(:facts){{ :os => { 'name' => 'RedHat' } }}
-
+    let(:facts) { { :os => { :name  => 'RedHat' } } }
+    
     it do
       should \
         contain_file('/etc/pki/tls/certs/meta').
@@ -40,7 +40,7 @@ describe 'ssl', :type => :class do
   end
 
   context 'on Debian-family based systems' do
-    let(:facts) {{ :os => { 'name' => 'Debian' } }}
+    let(:facts) { { :os => { :name => 'Debian' } } }
 
     it do
       should \
@@ -51,7 +51,7 @@ describe 'ssl', :type => :class do
   end
 
   context 'on ArchLinux-family based systems' do
-    let(:facts) {{ :os => { 'name' => 'ArchLinux' } }}
+    let(:facts) { { :os => { :name => 'ArchLinux' } } }
 
     it do
       should \
