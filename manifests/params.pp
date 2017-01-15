@@ -7,8 +7,8 @@ class ssl::params {
   $default_md   = 'sha256'
   $package      = 'openssl'
 
-  case $::facts['os']['name'] {
-    /^(Debian|Ubuntu|Archlinux)$/: {
+  case $::facts['osfamily'] {
+    /^(Debian|Ubuntu|ArchLinux)$/: {
       $crt_dir = '/etc/ssl/certs'
       $key_dir = '/etc/ssl/private'
     }
