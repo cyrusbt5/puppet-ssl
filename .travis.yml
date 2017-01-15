@@ -1,7 +1,8 @@
 language: ruby
 rvm:
- - 2.0.0
+ - 2.3.1
  - 2.1.0
+ - 2.0.0
 
 script: "bundle exec rake spec"
 
@@ -12,15 +13,9 @@ branches:
 
 notifications:
   email:
-    - robert_gurtler@yahoo.com.au
+    - robert.gurtler@anu.edu.au
 
 env:
   - PUPPET_VERSION="~> 4.8.0"
-  - PUPPET_VERSION="~> 4.7.0"
-  - PUPPET_VERSION="~> 4.6.0"
-  - PUPPET_VERSION="~> 4.5.0"
   - PUPPET_VERSION="~> 4.4.0"
-  - PUPPET_VERSION="~> 4.3.0"
-  - PUPPET_VERSION="~> 4.2.0"
-  - PUPPET_VERSION="~> 4.1.0"
   - PUPPET_VERSION="~> 4.0.0"
