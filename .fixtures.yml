@@ -1,7 +1,7 @@
 fixtures:
+  forge_modules:
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: "4.14.0"
   symlinks:
-    "ssl": "#{source_dir}"
-  repositories:
-    "stdlib":
-      repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
-      ref: "2.6.0"
+    ssl: "#{source_dir}"
