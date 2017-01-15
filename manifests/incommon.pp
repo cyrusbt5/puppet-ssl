@@ -5,7 +5,7 @@
 # === Parameters:
 # [*id*]
 #  InCommon certificate ID number, provided in the email notifying us
-#  that its ready 
+#  that its ready
 # [*cn*]
 #  Certificate Common Name.  If it doesn't match an ssl::cert entry with the
 #  same CN, this will fail non-destructively.
@@ -18,8 +18,8 @@
 # Otherwise, it'll try again the next time puppet runs, until it gets a cert.
 #
 define ssl::incommon (
- Pattern[/^([0-9]+|)$/] $id = '',
- String[1]              $cn = $name
+  Pattern[/^([0-9]+|)$/] $id = '',
+  String[1]              $cn = $name
 ) {
 
   include ssl::params
@@ -33,15 +33,15 @@ define ssl::incommon (
   }
 
   # Only try to obtain the cert if we have an id
-  if $id != "" {
+  if $id != '' {
     $url = "https://cert-manager.com/customer/InCommon/ssl?action=download&sslId=${id}"
-    $format_x509 = "&format=x509CO"
-    $format_int = "&format=x509IO"
+    $format_x509 = '&format=x509CO'
+    $format_int = '&format=x509IO'
     $url_x509 = shellquote( "${url}${format_x509}" )
     $url_int = shellquote( "${url}${format_int}" )
     $grab_int = "curl -q --silent ${url_int} -o ${ssl::params::crt_dir}/intermediate.crt"
-    $grab_x509 =  "mv -f ${ssl::params::crt_dir}/meta/${cn}.crt.tmp ${ssl::params::crt_dir}/${cn}.crt; 
-                   touch ${ssl::params::crt_dir}/meta/${cn}.lock" 
+    $grab_x509 =  "mv -f ${ssl::params::crt_dir}/meta/${cn}.crt.tmp ${ssl::params::crt_dir}/${cn}.crt;
+                   touch ${ssl::params::crt_dir}/meta/${cn}.lock"
 
     # check if the cert is ready
     exec { "get-cert-${cn}":
@@ -53,9 +53,9 @@ define ssl::incommon (
 
     # grab our intermediate cert
     exec { "get-int-${cn}":
-      creates  => "${ssl::params::crt_dir}/intermediate.crt",
-      command  => $grab_int,
-      path     => [ '/bin', '/usr/bin' ],
+      creates => "${ssl::params::crt_dir}/intermediate.crt",
+      command => $grab_int,
+      path    => [ '/bin', '/usr/bin' ],
     }
   }
 }
