@@ -106,11 +106,11 @@ define ssl::cert(
 
   # Generate our Self Signed Cert.
   exec { "generate-self-${cn}":
-    creates     => $crt_file,
-    command     => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
+    creates => $crt_file,
+    command => "/usr/bin/openssl req -config ${cnf_file} -new -nodes \
                      -key ${key_file} -out ${crt_file} -x509 -${signature_hash}",
-    path        => [ '/bin', '/usr/bin' ],
-    require     => Exec["generate-key-${cn}"],
+    path    => [ '/bin', '/usr/bin' ],
+    require => Exec["generate-key-${cn}"],
   }
 
   # CSR Decode to decode your Certificate Signing Request and
