@@ -16,3 +16,6 @@ coverage/
 !spec/fixtures
 spec/fixtures/*
 !spec/fixtures/hiera/
+
+vendor
+.bundle
