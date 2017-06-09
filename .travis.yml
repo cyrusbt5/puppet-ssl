@@ -16,6 +16,7 @@ notifications:
     - robert.gurtler@anu.edu.au
 
 env:
+  - PUPPET_VERSION="~> 4.10.0"
   - PUPPET_VERSION="~> 4.8.0"
   - PUPPET_VERSION="~> 4.4.0"
   - PUPPET_VERSION="~> 4.0.0"
