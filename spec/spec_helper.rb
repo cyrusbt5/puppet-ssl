@@ -8,6 +8,7 @@ RSpec.configure do |c|
   c.manifest        = File.join(fixture_path, 'manifests', 'site.pp')
   c.environmentpath = File.join(Dir.pwd, 'spec')
 
+  # Coverage generation
   c.after(:suite) do
     RSpec::Puppet::Coverage.report!
   end
