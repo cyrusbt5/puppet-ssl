@@ -1,4 +1,11 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter '/spec/'
+  # Exclude bundled Gems in `/.vendor/`
+  add_filter '/.vendor/'
+end
 
 fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
 
