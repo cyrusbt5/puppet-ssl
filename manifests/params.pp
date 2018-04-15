@@ -5,7 +5,7 @@ class ssl::params {
 
   $default_bits = 2048
   $default_md   = 'sha256'
-  $package      = 'openssl'
+  $package      = [ 'openssl' ]
 
   case $::facts['osfamily'] {
     /^(Debian|Ubuntu|ArchLinux)$/: {
