@@ -3,7 +3,9 @@ sudo: false
 cache: bundler
 
 bundler_args: --without system_tests
-before_install: rm Gemfile.lock || true
+before_install:
+  - rm Gemfile.lock || true
+  - gem update --system
 script: "bundle exec rake spec"
 
 matrix:
