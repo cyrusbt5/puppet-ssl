@@ -18,5 +18,5 @@ matrix:
 
 notifications:
   email:
-    - robert.gurtler@anu.edu.au
+    - robert_gurtler@yahoo.com.au
   on_failures: always
