@@ -4,7 +4,7 @@
 # is created
 #
 class ssl(
-  $package = $ssl::params::package,
+  Array[String] $package = $ssl::params::package,
 ) inherits ssl::params {
 
   class { 'ssl::package':
