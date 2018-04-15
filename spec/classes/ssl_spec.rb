@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'ssl', :type => :class do
+
   let :pre_condition do
     [
       'define ssl::cert {}',
@@ -8,15 +9,17 @@ describe 'ssl', :type => :class do
     ]
   end
 
-  it do
-    should \
-      contain_class('ssl::package').
-        with_package('openssl').
+  context 'with certname' do
+
+    it { is_expected.to contain_class('ssl::params') }
+
+    it { is_expected.to contain_class('ssl::package').
+        with_package(['openssl']).
         that_comes_before('ssl::cert[certname]')
+    }
 
-    should contain_class('ssl::params')
+    it { is_expected.to contain_ssl__cert('certname') }
 
-    should contain_ssl__cert('certname')
   end
 
   let :file_meta_params do
@@ -71,4 +74,5 @@ describe 'ssl', :type => :class do
           that_comes_before('ssl::cert[certname]')
     end
   end
+
 end
