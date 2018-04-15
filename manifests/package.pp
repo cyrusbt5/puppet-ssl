@@ -5,5 +5,5 @@
 class ssl::package(
   $package = [ 'openssl' ]
 ) {
-  ensure_packages( flatten([ $package ]) )
+  ensure_packages( flatten( [ $package ] ), { 'ensure' => 'present' } )
 }
